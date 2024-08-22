@@ -23,11 +23,10 @@ fn serialize_customer(customer: &Customer) -> Vec<u8> {
     buf
 }
 
-fn write_customer_to_file(customer: &Customer, filename: &str) {
-    let buf = serialize_customer(customer);
+fn write_serialized_customer_to_file(data: &Vec<u8>, filename: &str) {
     let file = File::create(filename).unwrap();
     let mut writer = BufWriter::new(file);
-    writer.write_all(&buf).unwrap();
+    writer.write_all(&data).unwrap();
 }
 
 fn read_customer_from_file(filename: &str) -> Customer {
@@ -41,9 +40,15 @@ fn read_customer_from_file(filename: &str) -> Customer {
 fn main() {
     println!("protobuf-rust");
 
-    // Create and serialize a customer
+    // Create a customer
     let customer = create_customer();
-    write_customer_to_file(&customer, "customer.dat");
+
+    // Serialize customer
+    let serialized_customer = serialize_customer(&customer);
+
+    // Write serialized customer to file
+    write_serialized_customer_to_file(&serialized_customer, "customer.dat");
+
     println!("Customer data serialized and written to file.");
 
     // Read and deserialize the customer
